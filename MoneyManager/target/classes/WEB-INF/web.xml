@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+	id="WebApp_ID" version="6.0">
+	
+	<!-- TODO: 2. WEB.XML 작성 -->
+	<!-- ROOTAPPLICATIONCONTEXT 객체를 생성 시 필요한 설정 파일의 위치 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+          <param-name>encoding</param-name>
+          <param-value>UTF-8</param-value>
+        </init-param>
+     </filter>
+     
+     <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+     </filter-mapping>
+     
+    <!-- Processes application requests -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<!-- DispatcherServlet이 해당 mapping을 찾지 못할 경우 NoHandlerFoundException를 throw하게 설정 -->
+		<init-param>
+			<param-name>throwExceptionIfNoHandlerFound</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		
+		<!-- DispatcherServlet 싱글톤 객체 객체 생성은 기본적으로 첫 요청이 들어올 때 생성  -->
+		<!-- 따라서 첫 user는 접속이 늦을 수 있다. 이 한명도 소중하기에 이 5줄을 작성한다.... 낭만 그 자체 -->
+		<!-- 아래 옵션을 사용하면 서버 구동 시 객체를 생성한다. -->
+		<load-on-startup>1</load-on-startup>
+		<multipart-config>
+			<max-file-size>52428800</max-file-size><!-- 파일 하나당 최대 파일 크기 -->
+			<max-request-size>52428800</max-request-size><!-- 업로드 파일의 총 크기 -->
+			<file-size-threshold>0</file-size-threshold><!-- 업로드하는 파일이 임시로 파일로 저장되지 않고 메모리에서 바로 스트림으로 전달되는 크기의 한계 1024 * 1024로 설정하면 1MB 이상인 경우에만 임시 파일로 저장. -->
+			<!-- <location></location> --><!-- 임시저장 경로 -->
+		</multipart-config>
+	</servlet>
+	
+	<!-- 위 서블릿이 동작하는 범위 설정 -->
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+</web-app>
+	
